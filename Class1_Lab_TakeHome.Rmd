@@ -1,0 +1,99 @@
+---
+title: "SMML Class 1 Lab Take-Home"
+author: "Sunghee Lee"
+date: "8/30/2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+header-includes:
+- \usepackage{bbm}
+- \usepackage{setspace}
+- \singlespacing
+number_sections: yes
+fontsize: 12pt
+fig_width: 7
+fig_height: 6
+---
+
+ 
+```{r setup, include=FALSE, tidy=TRUE}
+knitr::opts_chunk$set(echo = TRUE,cache=TRUE, 
+                      autodep=TRUE, cache.comments=FALSE,
+                      message=FALSE, warning=FALSE)
+```
+
+
+## Review. Take home exercise
+
+Data from the Health and Life Study of Koreans (HLSK) is available on Canvas, "HLSK.RDS". The codebook and other associated materials are available from https://www.icpsr.umich.edu/web/RCMD/studies/37635
+
+1. Download the data from Canvas. You can read the data into R using the "readRDS" function.
+```{r}
+HLSK<-readRDS(
+  "C:/Users/sungh/Dropbox (University of Michigan)/2022 SMML 1/HLSK/HLSK.RDS")
+#You need to change the path in the line above with yours as this 
+#is unique to my computer
+```
+
+2. Find household annual income variable. What difference do you see in this, compared to income in Wage and psid? 
+```{r}
+#Check the codebook from ICPSR website: 37635-0001-Codebook-ICPSR.pdf
+names(HLSK)
+summary(HLSK$LQ3_PUB)
+mean(HLSK$LQ3_PUB, na.rm=T)
+mn<-function(x){
+  mean(x, na.rm=T)
+  }
+mn(HLSK$LQ3_PUB)
+```
+
+3. What is the minimum, mean, mode, median and maximum of the income?
+```{r}
+summary(HLSK$LQ3_PUB)
+
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+  }
+
+Mode(HLSK$LQ3_PUB)
+```
+
+4. What is the variance and standard deviation of the income?
+```{r}
+var(HLSK$LQ3_PUB, na.rm=T)
+sd(HLSK$LQ3_PUB, na.rm=T)
+sqrt(var(HLSK$LQ3_PUB, na.rm=T))
+```
+
+5. Visualize the income using a histogram and a box plot. Do you see the patterns in #3 and #4 in these? What are the benefits of each visualization method? How about drawbacks?
+```{r} 
+library(ggplot2)
+ggplot(HLSK, aes(x=LQ3_PUB)) + geom_histogram()
+ggplot(HLSK, aes(x=LQ3_PUB)) + geom_histogram(binwidth=1000)
+ggplot(HLSK, aes(x=LQ3_PUB)) + geom_histogram(binwidth=5000)
+ggplot(HLSK, aes(x=LQ3_PUB)) + geom_histogram(binwidth=10000)
+
+ggplot(HLSK, aes(x=LQ3_PUB)) + geom_boxplot()
+ggplot(HLSK, aes(x=LQ3_PUB)) + geom_boxplot(notch=TRUE)
+ggplot(HLSK, aes(x=LQ3_PUB)) + geom_boxplot(notch=TRUE) + 
+  geom_dotplot(binaxis='x', stackdir='center', dotsize=0.2)
+
+```
+
+6. Going over the codebook and think about what kind of stories you want to learn about the income. How would you express those stories with formulas? 
+* What are potential factors that may influence immigrants' income ($y_i$) given the HLSK data?
+  * Examples
+    * Time of immirgration (e.g., before or after age 18)
+    * Country where the final degree was obtained (e.g., US. vs. non-US)
+    * Years in the U.S.
+* Is having a final degree from the US associated with higher income for Korean immigrants than a degree from elsewhere?
+  * Formula: $\mu_{US}>\mu_{Non-US}$
+* What is the relationship between years in the U.S. and immigrants' income?
+  * Formula: $\rho_{income,USyrs}$
+* What is the effect of one more year in the U.S. on immigrants' income?
+  * Formula: $y_{i}=\beta_0+\beta_1x_i+\epsilon_i$
+ 
+

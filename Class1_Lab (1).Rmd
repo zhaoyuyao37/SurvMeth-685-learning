@@ -1,0 +1,130 @@
+---
+title: "SMML Class 1 Lab"
+author: "Sunghee Lee"
+date: "8/30/2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+  word_document: default
+header-includes:
+- \usepackage{bbm}
+- \usepackage{setspace}
+- \singlespacing
+number_sections: yes
+fontsize: 12pt
+---
+
+```{r setup, include=FALSE, tidy=TRUE}
+knitr::opts_chunk$set(echo = TRUE,cache=TRUE, 
+                      autodep=TRUE, cache.comments=FALSE,
+                      message=FALSE, warning=FALSE)
+```
+
+
+
+## I. Made-up income data 1
+```{r}
+income1<-data.frame("id"=c(1:20),
+                          "income_usd"=rnorm(20, mean = 10000, 
+                                             sd = 10000/3), 
+                          "educ_yr"=rep(12,20))
+head(income1)
+summary(income1)
+```
+1. How do income and education look?
+2. Can you study the relationship between income and education?
+12 is repeating, everything is same; therefore, we cannot study the relationship between income and education
+
+
+## II. Made-up income data 2
+```{r}
+income2<-data.frame("id"=c(101:120),
+                          "income_usd"=rep(10000, 20), 
+                          "educ_yr"=sample(0:16,20,replace=T) )
+head(income2)
+summary(income2)
+```
+1. How do income and education look?
+2. Can you study the relationship between income and education?
+There is no relationship
+
+## III. Wage data in R package ISLR
+```{r, echo=FALSE}
+library(ISLR)
+```
+
+
+```{r}
+data("Wage")
+#See p.13 of R manual_ISLR.pdf for data description
+dim(Wage)
+names(Wage)
+head(Wage)
+summary(Wage)
+```
+1. What do you observe?
+  + What is the variable type for each variable? 
+2. What stories would you like to study using this data?
+3. How would you express those stories with formulas? 
+
+
+## IV. psid data in R package faraway
+```{r, echo=FALSE} 
+library(faraway)
+```
+
+```{r}
+data("psid")
+#See p.78 of R manual_faraway.pdf for data description
+head(psid)
+summary(psid)
+```
+1. What do you observe?
++ What is the variable type for each variable? 
+2. What stories would you like to study using this data?
+3. How would you express those stories with formulas? 
+
+
+## V. Fictitious data 
+```{r, echo=FALSE} 
+library(readxl)
+```
+
+```{r}
+fic_dat7<-read_excel(
+  "~/Desktop/Fictitious Data.xlsx",
+  sheet=7)
+head(fic_dat7)
+#View(fic_dat7)
+```
+
+```{r}
+#?read_excel
+```
+
+1. Compute the average of Distress_2019 and Distress_2021
+```{r}
+mean(fic_dat7$Distress_2019)
+mean(fic_dat7$Distress_2021)
+```
+- Can you say that there is a difference in Distress between 2019 and 2022?
+
+2. Compute the average of Distress_2019 and Distress_2021 by Sex
+```{r}
+cbind(aggregate(Distress_2019~Sex,fic_dat7,FUN=mean),
+      aggregate(Distress_2021~Sex,fic_dat7,FUN=mean))
+```
+- Can you say that there is a difference in Distress between Male and Female in 2019? How about 2022?
+
+## VI. Take home exercise
+
+Data from the Health and Life Study of Koreans (HLSK) is available on Canvas, "HLSK.RDS". The codebook and other associated materials are available from https://www.icpsr.umich.edu/web/RCMD/studies/37635
+
+1. Download the data from Canvas. You can read the data into R using the "readRDS" function.
+2. Find household annual income variable. What difference do you see in this, compared to income in Wage and psid? 
+3. What is the minumum, mean, mode, median and maximum of the income?
+4. What is the variance and standard deviation of the income?
+5. Visualize the income using a histogram and a box plot. Do you see the patterns in #3 and #4 in these? What are the benefits of each visualization method? How about drawbacks?
+6. Going over the codebook and think about what kind of stories you want to learn about the income. How would you express those stories with formulas? 
+ 
